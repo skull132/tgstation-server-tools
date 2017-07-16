@@ -9,7 +9,7 @@ namespace TGCommandLine
 		public RepoCommand()
 		{
 			Keyword = "repo";
-			Children = new Command[] { new RepoSetupCommand(), new RepoUpdateCommand(), new RepoChangelogCommand(), new RepoPythonPathCommand(), new RepoSetEmailCommand(), new RepoSetNameCommand(), new RepoMergePRCommand(), new RepoListPRsCommand(), new RepoStatusCommand(), new RepoListBackupsCommand(), new RepoCheckoutCommand(), new RepoResetCommand() };
+			Children = new Command[] { new RepoSetupCommand(), new RepoUpdateCommand(), new RepoChangelogCommand(), new RepoPythonPathCommand(), new RepoSetEmailCommand(), new RepoSetNameCommand(), new RepoMergePRCommand(), new RepoListPRsCommand(), new RepoStatusCommand(), new RepoListBackupsCommand(), new RepoCheckoutCommand(), new RepoResetCommand(), new RepoFlywayPathCommand() };
 		}
 		public override string GetHelpText()
 		{
@@ -342,4 +342,26 @@ namespace TGCommandLine
 			return res == null ? ExitCode.Normal : ExitCode.ServerError;
 		}
 	}
+
+    class RepoFlywayPathCommand : Command
+    {
+        public RepoFlywayPathCommand()
+        {
+            Keyword = "flyway-path";
+            RequiredParameters = 1;
+        }
+        protected override ExitCode Run(IList<string> parameters)
+        {
+            Server.GetComponent<ITGRepository>().SetFlywayPath(parameters[0]);
+            return ExitCode.Normal;
+        }
+        public override string GetArgumentString()
+        {
+            return "<path>";
+        }
+        public override string GetHelpText()
+        {
+            return "Set the path to the flyway executable";
+        }
+    }
 }

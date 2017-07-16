@@ -25,7 +25,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("tgstation")]
+        [global::System.Configuration.DefaultSettingValueAttribute("aurorastation")]
         public string ProjectName {
             get {
                 return ((string)(this["ProjectName"]));
@@ -236,6 +236,21 @@ namespace TGServerService.Properties {
             }
             set {
                 this["ReattachCommsKey"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FlywayPath
+        {
+            get
+            {
+                return ((string)(this["FlywayPath"]));
+            }
+            set
+            {
+                this["FlywayPath"] = value;
             }
         }
     }

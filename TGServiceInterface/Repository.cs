@@ -73,15 +73,15 @@ namespace TGServiceInterface
 		[OperationContract]
 		bool Exists();
 
-		/// <summary>
-		/// Deletes whatever may be left over and clones the repo at remote and checks out branch master
-		/// Will move config and data dirs to a backup location if they exist
-		/// runs asyncronously
-		/// </summary>
-		/// <param name="remote">The address of the repo to clone. If ssh protocol is used, repository_private_key.txt must exist in the server directory.</param>
-		/// <param name="branch">The branch of the repo to checkout</param>
-		/// <returns>null on success, error message on failure</returns>
-		[OperationContract]
+        /// <summary>
+        /// Deletes whatever may be left over and clones the repo at remote and checks out branch master
+        /// Will move config and data dirs to a backup location if they exist
+        /// runs asyncronously
+        /// </summary>
+        /// <param name="remote">The address of the repo to clone. If ssh protocol is used, repository_private_key.txt must exist in the server directory.</param>
+        /// <param name="branch">The branch of the repo to checkout</param>
+        /// <returns>null on success, error message on failure</returns>
+        [OperationContract]
 		string Setup(string remote, string branch = "master");
 
 		/// <summary>
@@ -209,5 +209,28 @@ namespace TGServiceInterface
 		/// <returns>A dictionary of tag name -> commit on success, null on failure</returns>
 		[OperationContract]
 		IDictionary<string, string> ListBackups(out string error);
-	}
+
+        /// <summary>
+        /// Runs the local migration files to update the repo.
+        /// </summary>
+        /// <param name="error">null on success, error on failure.</param>
+        /// <returns>The output from Flyway.</returns>
+        [OperationContract]
+        string MigrateSQL(out string error);
+
+        /// <summary>
+        /// Sets the path to a Flyway executable.
+        /// </summary>
+        /// <param name="path">The new path.</param>
+        /// <returns>true if the path exists, false otherwise.</returns>
+        [OperationContract]
+        bool SetFlywayPath(string path);
+
+        /// <summary>
+        /// Gets the path to a Flyway executable.
+        /// </summary>
+        /// <returns>The path to a Flyway executable.</returns>
+        [OperationContract]
+        string FlywayPath();
+    }
 }

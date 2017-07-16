@@ -891,5 +891,104 @@ namespace TGServerService
 		{
 			return Properties.Settings.Default.PythonPath;
 		}
+
+        //public api
+        public bool SetFlywayPath(string path)
+        {
+            if (!Directory.Exists(path))
+                return false;
+            Properties.Settings.Default.FlywayPath = Path.GetFullPath(path);
+            return true;
+        }
+
+        public string FlywayPath()
+        {
+            return Properties.Settings.Default.FlywayPath;
+        }
+
+        //public api
+        public string MigrateSQL(out string error)
+        {
+            return MigrateSQLImpl(out error);
+        }
+
+        public string MigrateSQLImpl(out string error)
+        {
+            const string migrationFiles = RepoPath + "/SQL";
+
+            if (!Exists())
+            {
+                error = "Repo doesn't exist!";
+                return null;
+            }
+
+            lock (RepoLock)
+            {
+                if (RepoBusy)
+                {
+                    error = "Repo is busy!";
+                    return null;
+                }
+
+                if (!File.Exists(FlywayConf))
+                {
+                    error = "Missing Flyway config file!";
+                    return null;
+                }
+
+                if (!Directory.Exists(migrationFiles))
+                {
+                    error = "Missing SQL migration folder!";
+                    return null;
+                }
+
+                var config = Properties.Settings.Default;
+
+                var flywayFile = config.FlywayPath + "/flyway";
+                if (!File.Exists(flywayFile))
+                {
+                    error = "Cannot locate flyway executable!";
+                    return null;
+                }
+
+                try
+                {
+                    string result;
+                    int exitCode;
+
+                    using (var flyway = new Process())
+                    {
+                        flyway.StartInfo.FileName = flywayFile;
+                        flyway.StartInfo.Arguments = String.Format("migrate -configFile={0} -locations=filesystem:{1}", FlywayConf, migrationFiles);
+                        flyway.StartInfo.UseShellExecute = true;
+                        flyway.StartInfo.RedirectStandardOutput = true;
+                        flyway.Start();
+
+                        using (StreamReader reader = flyway.StandardOutput)
+                        {
+                            result = reader.ReadToEnd();
+                        }
+                        flyway.WaitForExit();
+                        exitCode = flyway.ExitCode;
+                    }
+
+                    if (exitCode != 0)
+                    {
+                        error = "SQL migration failed!";
+                        return result;
+                    }
+
+                    error = null;
+                    TGServerService.WriteInfo("SQL migrations ran" + error, TGServerService.EventID.RepoSQLMigration);
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    error = e.ToString();
+                    TGServerService.WriteWarning("SQL migrations failed: " + error, TGServerService.EventID.RepoSQLMigrationFail);
+                    return null;
+                }
+            }
+        }
 	}
 }

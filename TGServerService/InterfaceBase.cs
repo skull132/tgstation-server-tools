@@ -38,7 +38,7 @@ namespace TGServerService
 		}
 
 		//one stop update
-		public string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog_if_enabled, ushort testmerge_pr)
+		public string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog_if_enabled, ushort testmerge_pr, bool run_migrations)
 		{
 			try
 			{
@@ -66,6 +66,15 @@ namespace TGServerService
 					if (res != null && res != RepoErrorUpToDate)
 						return res;
 				}
+
+                if (run_migrations)
+                {
+                    MigrateSQL(out res);
+                    if (res != null)
+                    {
+                        return res;
+                    }
+                }
 
 				GenerateChangelog(out res);
 				if (res == null && push_changelog_if_enabled && SSHAuth())

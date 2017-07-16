@@ -115,9 +115,10 @@ namespace TGServiceInterface
 		/// <param name="updateType">How to handle the repository during the update</param>
 		/// <param name="push_changelog_if_enabled">true if the changelog should be pushed to git</param>
 		/// <param name="testmerge_pr">If not zero, will testmerge the designated pull request</param>
+        /// <param name="run_migrations">true if we should run SQL migrations.</param>
 		/// <returns>null on success, error message on failure</returns>
 		[OperationContract]
-		string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog_if_enabled, ushort testmerge_pr = 0);
+		string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog_if_enabled, ushort testmerge_pr = 0, bool run_migrations = false);
 	}
 
 }

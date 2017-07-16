@@ -23,6 +23,8 @@ namespace TGServerService
 
 		const string TitleImagesConfig = StaticConfigDir + "/title_screens/images";
 
+        const string FlywayConf = StaticConfigDir + "/flyway.conf";
+
 		object configLock = new object();	//for atomic reads/writes
 
 		//Write out the admin assoiciations to admins.txt

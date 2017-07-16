@@ -70,6 +70,8 @@ namespace TGServerService
 			RepoPushFail = 5500,
 			RepoChangelog = 5600,
 			RepoChangelogFail = 5700,
+            RepoSQLMigration = 5800,
+            RepoSQLMigrationFail = 5900,
 			ServiceShutdownFail = 6100,
 			WorldReboot = 6200,
 			ServerUpdateApplied = 6300,

@@ -88,6 +88,9 @@ namespace TGControlPanel
 			PythonPathText.Visible = true;
 			RepoRefreshButton.Visible = true;
 			PythonPathText.Text = Repo.PythonPath();
+            FlywayPathLabel.Visible = true;
+            FlywayPathText.Visible = true;
+            FlywayPathText.Text = Repo.FlywayPath();
 
 			if (!Repo.Exists())
 			{
@@ -209,11 +212,19 @@ namespace TGControlPanel
 				RepoBGW.ReportProgress(Repo.CheckoutProgress());
 			} while (Repo.OperationInProgress());
 		}
+
 		void UpdatePythonPath()
 		{
 			if (!Server.GetComponent<ITGRepository>().SetPythonPath(PythonPathText.Text))
 				MessageBox.Show("Python could not be found in the selected location!");
 		}
+
+        void UpdateFlywayPath()
+        {
+            if (!Server.GetComponent<ITGRepository>().SetFlywayPath(FlywayPathText.Text))
+                MessageBox.Show("Flyway could not be found in the selected location!");
+        }
+
 		private void CloneRepositoryButton_Click(object sender, EventArgs e)
 		{
 			CloneRepo();
@@ -262,6 +273,8 @@ namespace TGControlPanel
 			ResetRemote.Visible = false;
 			BackupTagsList.Visible = false;
 			RepoRefreshButton.Visible = false;
+            FlywayPathLabel.Visible = false;
+            FlywayPathText.Visible = false;
 
 			RepoPanel.UseWaitCursor = true;
 
@@ -311,6 +324,7 @@ namespace TGControlPanel
 					DoAsyncOp(RepoAction.Checkout, String.Format("Checking out {0}...", CheckoutBranch));
 				
 				UpdatePythonPath();
+                UpdateFlywayPath();
 			}
 			else
 				CloneRepositoryButton_Click(null, null);
