@@ -9,7 +9,7 @@ namespace TGS.CommandLine
 		public RepoCommand()
 		{
 			Keyword = "repo";
-			Children = new Command[] { new RepoSetupCommand(), new RepoUpdateCommand(), new RepoGenChangelogCommand(), new RepoPushChangelogCommand(), new RepoSetEmailCommand(), new RepoSetNameCommand(), new RepoMergePRCommand(), new RepoListPRsCommand(), new RepoStatusCommand(), new RepoListBackupsCommand(), new RepoCheckoutCommand(), new RepoResetCommand(), new RepoUpdateJsonCommand(), new RepoSetPushTestmergeCommitsCommand() };
+			Children = new Command[] { new RepoSetupCommand(), new RepoUpdateCommand(), new RepoGenChangelogCommand(), new RepoPushChangelogCommand(), new RepoSetEmailCommand(), new RepoSetNameCommand(), new RepoMergePRCommand(), new RepoListPRsCommand(), new RepoStatusCommand(), new RepoListBackupsCommand(), new RepoCheckoutCommand(), new RepoResetCommand(), new RepoUpdateJsonCommand(), new RepoSetPushTestmergeCommitsCommand(), new RepoRunPostMergeTasks() };
 		}
 		public override string GetHelpText()
 		{
@@ -402,6 +402,26 @@ namespace TGS.CommandLine
 			var res = Instance.Repository.Checkout(parameters[0]);
 			OutputProc(res ?? "Success");
 			return res == null ? ExitCode.Normal : ExitCode.ServerError;
+		}
+	}
+	class RepoRunPostMergeTasks : ConsoleCommand
+	{
+		public RepoRunPostMergeTasks()
+		{
+			Keyword = "run-merge-tasks";
+		}
+
+		protected override ExitCode Run(IList<string> parameters)
+		{
+			var error = Instance.Repository.RunPostMergeTasks();
+			OutputProc(error ?? "Success!");
+
+			return error == null ? ExitCode.Normal : ExitCode.ServerError;
+		}
+
+		public override string GetHelpText()
+		{
+			return "Compiles the html changelog";
 		}
 	}
 }

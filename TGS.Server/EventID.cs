@@ -331,5 +331,13 @@ namespace TGS.Server
 		/// Warning: When a testmerge commit failed to be published
 		/// </summary>
 		ReferencePush = 7700,
+		/// <summary>
+		/// Info: Successful completion of all post merge tasks by <see cref="TGS.Interface.Components.ITGRepository.RunPostMergeTasks()"/>.
+		/// </summary>
+		PostMergeTasks = 7800,
+		/// <summary>
+		/// Warning: Error in executing a task in <see cref="TGS.Interface.Components.ITGRepository.RunPostMergeTasks()"/>.
+		/// </summary>
+		PostMergeTasksFail = 7900,
 	}
 }

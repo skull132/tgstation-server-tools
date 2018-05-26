@@ -18,6 +18,7 @@ namespace TGS.ControlPanel
 			Test,
 			Wait,
 			GenCL,
+			PostMergeTasks,
 		}
 
 		RepoAction action;
@@ -198,6 +199,8 @@ namespace TGS.ControlPanel
 					if(repoError != null)
 						repoError += ": " + result;
 					break;
+				case RepoAction.PostMergeTasks:
+					repoError = Repo.RunPostMergeTasks();
 				default:
 					//reeee
 					return;

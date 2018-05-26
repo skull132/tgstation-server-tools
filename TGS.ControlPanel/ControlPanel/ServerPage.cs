@@ -351,6 +351,11 @@ namespace TGS.ControlPanel
 					if (res != null)
 						MessageBox.Show(res, "Error generating changelog");
 
+					res = await Task.Run(() => repo.RunPostMergeTasks());
+
+					if (res != null)
+						MessageBox.Show(res, "Error running post-merge tasks");
+
 					res = await Task.Run(() => repo.SynchronizePush());
 
 					if (res != null)
@@ -424,6 +429,10 @@ namespace TGS.ControlPanel
 
 					if (res != null)
 						MessageBox.Show(res, "Error generating changelog");
+
+					res = await Task.Run(() => repo.RunPostMergeTasks());
+					if (res != null)
+						MessageBox.Show(res, "Error running post-merge tasks");
 
 					await Task.Run(() => Instance.Compiler.Compile(false));
 					if (res != null)

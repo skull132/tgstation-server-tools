@@ -1462,6 +1462,11 @@ namespace TGS.Server
 				}
 			}
 
+			if (error == null)
+				WriteInfo($"{RConf.PostMergeTasks.Count} post-merge tasks ran.", EventID.PostMergeTasks);
+			else
+				WriteInfo("A post-merge task failed: " + error, EventID.PostMergeTasksFail);
+
 			return error;
 		}
 

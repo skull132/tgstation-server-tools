@@ -31,6 +31,7 @@ namespace TGS.Server
 		public readonly IList<string> PipDependancies = new List<string>();
 		/// <summary>
 		/// A list of tasks to run after merge. Failure of a task means bad merge.
+		/// All of these tasks are ran in <see cref="TGS.Interface.Components.ITGRepository.RunPostMergeTasks()"/>.
 		/// </summary>
 		public readonly IList<ITaskHolder> PostMergeTasks = new List<ITaskHolder>();
 		/// <summary>
