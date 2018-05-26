@@ -16,6 +16,14 @@
       "packages"
     ]
   },
+  "post-merge-tasks": [
+    {
+      "name": "a",
+      "command": "list",
+      "args": ["objects", "that", "describe", "tasks", "to", "run", "after", "merge"],
+      "isShell": true
+    }
+  ],
   "synchronize_paths": [
     "list",
     "of",
