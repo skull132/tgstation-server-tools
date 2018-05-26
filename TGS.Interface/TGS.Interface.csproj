@@ -68,8 +68,10 @@
     <Compile Include="IInstance.cs" />
     <Compile Include="InstanceMetadata.cs" />
     <Compile Include="Instance.cs" />
+    <Compile Include="ITaskHolder.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="IClient.cs" />
+    <Compile Include="TaskHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Components\Repository.cs" />
     <Compile Include="PullRequestInfo.cs" />

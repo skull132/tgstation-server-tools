@@ -152,6 +152,13 @@ namespace TGS.Interface.Components
 		string GenerateChangelog(out string error);
 
 		/// <summary>
+		/// Runs all tasks described in the TGS3.json as post-merge-tasks.
+		/// </summary>
+		/// <returns><see langword="null"/> on success, error contents on failure.</returns>
+		[OperationContract]
+		string RunPostMergeTasks();
+
+		/// <summary>
 		/// Pushes the paths listed in TGS3.json to the currentl git remote. No other commit differences may exist for this function to succeed
 		/// </summary>
 		/// <returns><see langword="null"/> on success, error on failure</returns>

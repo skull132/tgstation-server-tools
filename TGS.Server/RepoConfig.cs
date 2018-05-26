@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TGS.Interface;
 
 namespace TGS.Server
 {
@@ -28,6 +29,10 @@ namespace TGS.Server
 		/// List of python pip dependencies for the changelog generator script
 		/// </summary>
 		public readonly IList<string> PipDependancies = new List<string>();
+		/// <summary>
+		/// A list of tasks to run after merge. Failure of a task means bad merge.
+		/// </summary>
+		public readonly IList<ITaskHolder> PostMergeTasks = new List<ITaskHolder>();
 		/// <summary>
 		/// Paths to commit and push to the remote repository
 		/// </summary>
@@ -69,6 +74,11 @@ namespace TGS.Server
 			}
 			try
 			{
+				PostMergeTasks = GeneratePostMergeTasks(json["post_merge_tasks"]);
+			}
+			catch { }
+			try
+			{
 				PathsToStage = LoadArray(json["synchronize_paths"]);
 			}
 			catch { }
@@ -94,6 +104,30 @@ namespace TGS.Server
 			var res = new List<string>();
 			foreach (var I in ((JArray)o))
 				res.Add(I.ToObject<string>());
+			return res;
+		}
+
+		/// <summary>
+		/// Generates a new list of <see cref="TaskHolder"/>s for use.
+		/// </summary>
+		/// <param name="initialJson">The root token for the list of JSON objects describing tasks.</param>
+		/// <returns>A list of <see cref="TaskHolder"/>s read from JSON.</returns>
+		private static IList<ITaskHolder> GeneratePostMergeTasks(object initialJson)
+		{
+			var res = new List<ITaskHolder>();
+
+			foreach (var taskData in (JArray)initialJson)
+			{
+				try
+				{
+					var task = new TaskHolder(taskData);
+					res.Add(task);
+				}
+				catch
+				{
+				}
+			}
+
 			return res;
 		}
 

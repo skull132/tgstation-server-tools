@@ -1394,6 +1394,78 @@ namespace TGS.Server
 		}
 
 		/// <inheritdoc />
+		public string RunPostMergeTasks()
+		{
+			return RunPostMergeTasksImpl();
+		}
+
+		/// <summary>
+		/// Implementation for the post merge tasks list.
+		/// </summary>
+		/// <returns><see langword="null"/> on success, error on failure.</returns>
+		public string RunPostMergeTasksImpl()
+		{
+			var RConf = GetCachedRepoConfig();
+			if (RConf == null)
+			{
+				return "Error loading config from post-merge tasks!";
+			}
+
+			if (RConf.PostMergeTasks.Count == 0)
+			{
+				return null;
+			}
+
+			string error = null;
+
+			lock (RepoLock)
+			{
+				if (RepoBusy)
+				{
+					return "Repo is busy!";
+				}
+
+				DirectoryInfo repoDir = new DirectoryInfo(RelativePath(RepoPath));
+
+				foreach (var task in RConf.PostMergeTasks)
+				{
+					try
+					{
+						task.RunTask(repoDir, 10);
+					}
+					catch (TaskRunFailure eRunFailure)
+					{
+						if (!string.IsNullOrEmpty(eRunFailure.StandardError))
+						{
+							error = eRunFailure.StandardError;
+						}
+						else if (!string.IsNullOrEmpty(eRunFailure.StandardOut))
+						{
+							error = eRunFailure.StandardOut;
+						}
+						else if (!string.IsNullOrEmpty(eRunFailure.Message))
+						{
+							error = eRunFailure.Message;
+						}
+						else
+						{
+							error = $"Task {task.Name} failed.";
+						}
+
+						break;
+					}
+					catch (TaskTimeoutException eTimeout)
+					{
+						error = eTimeout.Message;
+						break;
+					}
+				}
+			}
+
+			return error;
+		}
+
+		/// <inheritdoc />
 		public void SetAutoUpdateInterval(ulong newInterval)
 		{
 			lock (autoUpdateTimer)
